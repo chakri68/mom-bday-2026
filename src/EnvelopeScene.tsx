@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "motion/react";
 import Envelope from "./Envelope";
 import Letter from "./Letter";
+import LetterBackdrop from "./LetterBackdrop";
 
 type Props = {
   opened: boolean;
@@ -31,12 +32,15 @@ export default function EnvelopeScene({ opened, onOpen }: Props) {
         ) : (
           <motion.div
             key="letter"
-            className="w-full"
+            className="relative w-full"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
           >
-            <Letter />
+            <LetterBackdrop />
+            <div className="relative z-10">
+              <Letter />
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

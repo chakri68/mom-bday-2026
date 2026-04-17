@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@theme {
+  --font-caveat: "Caveat", cursive;
+  --color-cream: #fdf6ec;
+  --color-warm-white: #fefcf8;
+  --color-pastel-pink: #f8e0e6;
+  --color-muted-red: #c96b6b;
+  --color-soft-brown: #8b6f5e;
+  --color-beige: #f5ead6;
+  --color-seal-red: #b33a3a;
+  --color-seal-dark: #8a2020;
+  --color-envelope-body: #e8d5b7;
+  --color-envelope-flap: #d4bc94;
+  --color-envelope-inner: #c9a96e;
+  --color-paper: #fef9f0;
+}

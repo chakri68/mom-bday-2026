@@ -2,6 +2,7 @@
 
 @theme {
   --font-caveat: "Caveat", cursive;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --color-cream: #fdf6ec;
   --color-warm-white: #fefcf8;
   --color-pastel-pink: #f8e0e6;
@@ -14,4 +15,49 @@
   --color-envelope-flap: #d4bc94;
   --color-envelope-inner: #c9a96e;
   --color-paper: #fef9f0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: radial-gradient(
+    ellipse at center,
+    #fefcf8 0%,
+    #fdf6ec 55%,
+    #f5ead6 100%
+  );
+  color: #4a3a2e;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+.paper-grain {
+  background-image:
+    radial-gradient(rgba(139, 111, 94, 0.07) 1px, transparent 1px),
+    radial-gradient(rgba(139, 111, 94, 0.05) 1px, transparent 1px);
+  background-size:
+    3px 3px,
+    7px 7px;
+  background-position:
+    0 0,
+    1px 2px;
+}
+
+.vignette::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 55%,
+    rgba(80, 50, 30, 0.18) 100%
+  );
+  z-index: 1;
 }

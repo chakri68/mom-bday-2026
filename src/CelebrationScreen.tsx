@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { motion } from "motion/react";
 import confetti from "canvas-confetti";
+import { playSound } from "./audio/sounds";
 
 type Props = { onDone: () => void };
 
@@ -30,34 +31,15 @@ export default function CelebrationScreen({ onDone }: Props) {
     fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
     fire(0.1, { spread: 120, startVelocity: 45 });
 
-    // optional celebratory sound via WebAudio (no asset needed)
-    try {
-      const ctx = new (
-        window.AudioContext ||
-        (window as unknown as { webkitAudioContext: typeof AudioContext })
-          .webkitAudioContext
-      )();
-      const notes = [523.25, 659.25, 783.99, 1046.5]; // C E G C
-      notes.forEach((freq, i) => {
-        const o = ctx.createOscillator();
-        const g = ctx.createGain();
-        o.type = "triangle";
-        o.frequency.value = freq;
-        const start = ctx.currentTime + i * 0.12;
-        g.gain.setValueAtTime(0, start);
-        g.gain.linearRampToValueAtTime(0.15, start + 0.02);
-        g.gain.exponentialRampToValueAtTime(0.001, start + 0.35);
-        o.connect(g).connect(ctx.destination);
-        o.start(start);
-        o.stop(start + 0.4);
-      });
-      setTimeout(() => ctx.close(), 2000);
-    } catch {
-      // audio optional
-    }
+    // popper first, cheer layered just behind
+    playSound("popper");
+    const cheerTimer = setTimeout(() => playSound("cheer"), 180);
 
-    const t = setTimeout(onDone, 2400);
-    return () => clearTimeout(t);
+    const t = setTimeout(onDone, 2600);
+    return () => {
+      clearTimeout(cheerTimer);
+      clearTimeout(t);
+    };
   }, [onDone]);
 
   return (

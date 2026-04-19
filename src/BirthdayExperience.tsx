@@ -1,18 +1,24 @@
 import { useState } from "react";
 import { AnimatePresence } from "motion/react";
+import LoadingScreen from "./LoadingScreen";
 import StartScreen from "./StartScreen";
 import CelebrationScreen from "./CelebrationScreen";
 import EnvelopeScene from "./EnvelopeScene";
+import MuteToggle from "./MuteToggle";
 
-export type Step = "start" | "celebrate" | "envelope" | "open";
+export type Step = "loading" | "start" | "celebrate" | "envelope" | "open";
 
 export default function BirthdayExperience() {
-  const [step, setStep] = useState<Step>("start");
+  const [step, setStep] = useState<Step>("loading");
 
   return (
     <div className="relative min-h-screen w-full vignette overflow-hidden">
       <FloatingParticles />
+      {step !== "loading" && <MuteToggle />}
       <AnimatePresence mode="wait">
+        {step === "loading" && (
+          <LoadingScreen key="loading" onReady={() => setStep("start")} />
+        )}
         {step === "start" && (
           <StartScreen key="start" onStart={() => setStep("celebrate")} />
         )}

@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
 import { useState } from "react";
+import { playSound } from "./audio/sounds";
 
 type Props = { onOpen: () => void };
 
@@ -9,28 +10,11 @@ export default function Envelope({ onOpen }: Props) {
   const handleClick = () => {
     if (pressed) return;
     setPressed(true);
-    // small rustle sound
-    try {
-      const ctx = new (
-        window.AudioContext ||
-        (window as unknown as { webkitAudioContext: typeof AudioContext })
-          .webkitAudioContext
-      )();
-      const buffer = ctx.createBuffer(1, ctx.sampleRate * 0.5, ctx.sampleRate);
-      const data = buffer.getChannelData(0);
-      for (let i = 0; i < data.length; i++) {
-        data[i] = (Math.random() * 2 - 1) * (1 - i / data.length) * 0.25;
-      }
-      const src = ctx.createBufferSource();
-      src.buffer = buffer;
-      const g = ctx.createGain();
-      g.gain.value = 0.4;
-      src.connect(g).connect(ctx.destination);
-      src.start();
-      setTimeout(() => ctx.close(), 800);
-    } catch {
-      // optional
-    }
+
+    // seal snap immediately, paper turn a beat later as the flap opens
+    playSound("snap");
+    setTimeout(() => playSound("paperTurn"), 220);
+
     // let flap animate, then switch to letter view
     setTimeout(onOpen, 900);
   };

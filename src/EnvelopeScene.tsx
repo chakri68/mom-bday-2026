@@ -1,7 +1,9 @@
+import { useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import Envelope from "./Envelope";
 import Letter from "./Letter";
 import LetterBackdrop from "./LetterBackdrop";
+import { bgMusic, playSound } from "./audio/sounds";
 
 type Props = {
   opened: boolean;
@@ -9,6 +11,14 @@ type Props = {
 };
 
 export default function EnvelopeScene({ opened, onOpen }: Props) {
+  // Fade in background music when the letter appears; play the letter-slide
+  // sound at the same beat.
+  useEffect(() => {
+    if (!opened) return;
+    playSound("paperSlide");
+    bgMusic.fadeIn(0.3, 2500);
+  }, [opened]);
+
   return (
     <motion.section
       className="relative z-10 flex min-h-screen w-full flex-col items-center justify-start px-4 py-10 sm:py-16"

@@ -1,6 +1,10 @@
 {
   "siteTitle": "Happy Birthday Mumma",
 
+  "features": {
+    "showScrapbook": false
+  },
+
   "start": {
     "tagline": "a little something for you, mom",
     "button": "Click to start",
@@ -18,7 +22,8 @@
   "celebration": {
     "line1": "Happy Birthday",
     "line2": "Mom",
-    "emoji": "🎉"
+    "emoji": "🎉",
+    "continueHint": "click anywhere to continue"
   },
 
   "envelope": {
@@ -67,5 +72,72 @@
     "withLove": "With love,",
     "writtenBy": "Written by Bruhathi",
     "directedBy": "Put together by Chakri ❤️"
+  },
+
+  "scrapbook": {
+    "button": "Go to Scrapbook ♡",
+    "coverTitle": "Our Scrapbook",
+    "coverSubtitle": "tap to open",
+    "backButton": "← back to letter",
+    "prev": "prev",
+    "next": "next",
+    "pages": [
+      [
+        {
+          "src": "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=600&q=60",
+          "caption": "sunday mornings",
+          "rotate": -4,
+          "attach": "tape"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?w=600&q=60",
+          "caption": "that laugh ♡",
+          "rotate": 3,
+          "attach": "clip"
+        }
+      ],
+      [
+        {
+          "src": "https://images.unsplash.com/photo-1519741497674-611481863552?w=600&q=60",
+          "caption": "little adventures",
+          "rotate": 2,
+          "attach": "clip"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1478476868527-002ae3f3e159?w=600&q=60",
+          "caption": "home",
+          "rotate": -3,
+          "attach": "tape"
+        }
+      ],
+      [
+        {
+          "src": "https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?w=600&q=60",
+          "caption": "golden hours",
+          "rotate": -2,
+          "attach": "tape"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1470813740244-df37b8c1edcb?w=600&q=60",
+          "caption": "under the stars",
+          "rotate": 4,
+          "attach": "clip"
+        }
+      ],
+      [
+        {
+          "src": "https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?w=600&q=60",
+          "caption": "always smiling",
+          "rotate": 3,
+          "attach": "tape"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=600&q=60",
+          "caption": "little us",
+          "rotate": -5,
+          "attach": "clip"
+        }
+      ]
+    ]
   }
 }

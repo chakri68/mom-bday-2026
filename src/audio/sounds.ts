@@ -86,6 +86,9 @@ export const BG_PLAYLIST: string[] = [
   `${base}music/Benson Boone - Beautiful Things (Instrumental) [Official Audio] [yKGWdveqdVA].mp3`,
 ];
 
+/** Single looping track used during the celebration screen. */
+export const HAPPY_BIRTHDAY_SRC = `${base}music/Happy Birthday (Piano Version) [vhVBWw6rId0].mp3`;
+
 /* ------------------------------------------------------------------ */
 
 let ctx: AudioContext | null = null;
@@ -341,3 +344,78 @@ class BgMusic {
 }
 
 export const bgMusic = new BgMusic();
+
+/* ------------------ happy-birthday loop ------------------- */
+
+/**
+ * Simple looping track with fade-in / fade-out. Used during the celebration
+ * screen and independent of the main letter-scene playlist.
+ */
+class LoopTrack {
+  private el: HTMLAudioElement | null = null;
+  private rafId = 0;
+  private readonly src: string;
+
+  constructor(src: string) {
+    this.src = src;
+  }
+
+  preload(): void {
+    if (this.el) return;
+    const a = new Audio(this.src);
+    a.loop = true;
+    a.preload = "auto";
+    a.volume = 0;
+    try {
+      a.load();
+    } catch {
+      /* ignore */
+    }
+    this.el = a;
+  }
+
+  fadeIn(targetVolume = 0.45, durationMs = 1200): void {
+    if (isMuted()) return;
+    if (!this.el) this.preload();
+    const el = this.el;
+    if (!el) return;
+    el.loop = true;
+    el.play().catch(() => {
+      /* autoplay may still be blocked */
+    });
+    this.fadeTo(targetVolume, durationMs);
+  }
+
+  fadeOut(durationMs = 900, onDone?: () => void): void {
+    const el = this.el;
+    if (!el) {
+      onDone?.();
+      return;
+    }
+    this.fadeTo(0, durationMs, () => {
+      el.pause();
+      el.currentTime = 0;
+      onDone?.();
+    });
+  }
+
+  private fadeTo(target: number, durationMs: number, onDone?: () => void) {
+    const el = this.el;
+    if (!el) return;
+    cancelAnimationFrame(this.rafId);
+    const start = el.volume;
+    const startedAt = performance.now();
+    const step = (now: number) => {
+      const t = Math.min(1, (now - startedAt) / durationMs);
+      el.volume = Math.max(0, start + (target - start) * t);
+      if (t < 1) {
+        this.rafId = requestAnimationFrame(step);
+      } else {
+        onDone?.();
+      }
+    };
+    this.rafId = requestAnimationFrame(step);
+  }
+}
+
+export const happyBirthdayLoop = new LoopTrack(HAPPY_BIRTHDAY_SRC);

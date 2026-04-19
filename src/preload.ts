@@ -1,4 +1,4 @@
-import { SOUNDS, loadSound, bgMusic } from "./audio/sounds";
+import { SOUNDS, loadSound, bgMusic, happyBirthdayLoop } from "./audio/sounds";
 import { POLAROID_IMAGES } from "./assets/images";
 
 /**
@@ -37,6 +37,7 @@ export async function preloadAll(
 
   // fire-and-forget: tell the browser to start buffering the bg track
   bgMusic.preload();
+  happyBirthdayLoop.preload();
 }
 
 function loadImage(src: string): Promise<void> {

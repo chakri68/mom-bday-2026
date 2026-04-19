@@ -4,12 +4,21 @@ import LoadingScreen from "./LoadingScreen";
 import StartScreen from "./StartScreen";
 import CelebrationScreen from "./CelebrationScreen";
 import EnvelopeScene from "./EnvelopeScene";
+import ScrapbookScene from "./ScrapbookScene";
 import MuteToggle from "./MuteToggle";
+import content from "./content";
 
-export type Step = "loading" | "start" | "celebrate" | "envelope" | "open";
+export type Step =
+  | "loading"
+  | "start"
+  | "celebrate"
+  | "envelope"
+  | "open"
+  | "scrapbook";
 
 export default function BirthdayExperience() {
   const [step, setStep] = useState<Step>("loading");
+  const scrapbookEnabled = content.features.showScrapbook;
 
   return (
     <div className="relative min-h-screen w-full vignette overflow-hidden">
@@ -33,7 +42,13 @@ export default function BirthdayExperience() {
             key="envelope"
             opened={step === "open"}
             onOpen={() => setStep("open")}
+            onOpenScrapbook={
+              scrapbookEnabled ? () => setStep("scrapbook") : undefined
+            }
           />
+        )}
+        {step === "scrapbook" && scrapbookEnabled && (
+          <ScrapbookScene key="scrapbook" onBack={() => setStep("open")} />
         )}
       </AnimatePresence>
     </div>

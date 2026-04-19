@@ -10,8 +10,13 @@ export type PolaroidImage = {
   rotate: number;
 };
 
+export type ScrapbookPhoto = PolaroidImage & {
+  attach: "tape" | "clip";
+};
+
 export type Content = {
   siteTitle: string;
+  features: { showScrapbook: boolean };
   start: { tagline: string; button: string; hint: string };
   loading: {
     loadingText: string;
@@ -20,11 +25,25 @@ export type Content = {
     buttonReady: string;
     footer: string;
   };
-  celebration: { line1: string; line2: string; emoji: string };
+  celebration: {
+    line1: string;
+    line2: string;
+    emoji: string;
+    continueHint: string;
+  };
   envelope: { hint: string };
   letter: { lines: string[]; closing: string; signature: string };
   polaroids: { heading: string; photos: PolaroidImage[] };
   credits: { withLove: string; writtenBy: string; directedBy: string };
+  scrapbook: {
+    button: string;
+    coverTitle: string;
+    coverSubtitle: string;
+    backButton: string;
+    prev: string;
+    next: string;
+    pages: ScrapbookPhoto[][];
+  };
 };
 
 const typed = content as Content;

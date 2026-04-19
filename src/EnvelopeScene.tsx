@@ -8,9 +8,14 @@ import { bgMusic, playSound } from "./audio/sounds";
 type Props = {
   opened: boolean;
   onOpen: () => void;
+  onOpenScrapbook?: () => void;
 };
 
-export default function EnvelopeScene({ opened, onOpen }: Props) {
+export default function EnvelopeScene({
+  opened,
+  onOpen,
+  onOpenScrapbook,
+}: Props) {
   // Fade in background music when the letter appears; play the letter-slide
   // sound at the same beat.
   useEffect(() => {
@@ -49,7 +54,7 @@ export default function EnvelopeScene({ opened, onOpen }: Props) {
           >
             <LetterBackdrop />
             <div className="relative z-10">
-              <Letter />
+              <Letter onOpenScrapbook={onOpenScrapbook} />
             </div>
           </motion.div>
         )}

@@ -2,8 +2,13 @@ import { motion } from "motion/react";
 import PolaroidPhotos from "./PolaroidPhotos";
 import content from "./content";
 
-export default function Letter() {
-  const { letter, credits } = content;
+type Props = {
+  onOpenScrapbook?: () => void;
+};
+
+export default function Letter({ onOpenScrapbook }: Props) {
+  const { letter, credits, scrapbook, features } = content;
+  const showScrapbookButton = features.showScrapbook && !!onOpenScrapbook;
   return (
     <motion.article
       initial={{ y: 80, opacity: 0, scale: 0.97 }}
@@ -57,6 +62,26 @@ export default function Letter() {
 
       {/* Polaroid section */}
       <PolaroidPhotos />
+
+      {/* Scrapbook CTA */}
+      {showScrapbookButton && (
+        <motion.div
+          className="mt-10 flex justify-center"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 2.5, duration: 0.7 }}
+        >
+          <motion.button
+            type="button"
+            onClick={onOpenScrapbook}
+            className="rounded-full bg-muted-red/90 px-6 py-3 font-school text-sm uppercase tracking-[0.2em] text-warm-white shadow-[0_10px_30px_-10px_rgba(201,107,107,0.6)] transition hover:bg-muted-red"
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.97 }}
+          >
+            {scrapbook.button}
+          </motion.button>
+        </motion.div>
+      )}
 
       {/* Credits */}
       <motion.div

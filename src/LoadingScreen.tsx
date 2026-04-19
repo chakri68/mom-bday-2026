@@ -74,12 +74,12 @@ export default function LoadingScreen({ onReady }: Props) {
         <motion.button
           onClick={handleBegin}
           disabled={!done}
-          className="mt-4 rounded-full bg-muted-red/90 px-8 py-3 font-school text-sm tracking-wider uppercase text-warm-white shadow-[0_10px_30px_-10px_rgba(201,107,107,0.6)] transition enabled:hover:bg-muted-red disabled:cursor-not-allowed disabled:opacity-40"
+          className="mt-4 rounded-full bg-muted-red/90 px-8 py-3 font-school text-sm tracking-wider uppercase text-warm-white shadow-[0_10px_30px_-10px_rgba(201,107,107,0.6)] enabled:hover:bg-muted-red disabled:cursor-not-allowed disabled:opacity-40"
           whileHover={done ? { scale: 1.04 } : undefined}
           whileTap={done ? { scale: 0.96 } : undefined}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
+          transition={{ duration: 0.1, ease: "linear" }}
         >
           {done ? "Begin ♡" : "loading…"}
         </motion.button>

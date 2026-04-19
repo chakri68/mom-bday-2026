@@ -23,12 +23,12 @@ export default function StartScreen({ onStart }: Props) {
 
         <motion.button
           onClick={onStart}
-          className="group relative rounded-full bg-muted-red/90 px-8 py-3 font-school text-sm uppercase tracking-[0.2em] text-warm-white shadow-[0_10px_30px_-10px_rgba(201,107,107,0.6)] transition hover:bg-muted-red"
+          className="group relative rounded-full bg-muted-red/90 px-8 py-3 font-school text-sm uppercase tracking-[0.2em] text-warm-white shadow-[0_10px_30px_-10px_rgba(201,107,107,0.6)] hover:bg-muted-red"
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.96 }}
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.6, duration: 0.6, ease: "easeOut" }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
         >
           Click to start
           <span className="pointer-events-none absolute -inset-2 rounded-full ring-1 ring-muted-red/20 transition group-hover:ring-muted-red/40" />

@@ -1,7 +1,9 @@
 import { motion } from "motion/react";
 import PolaroidPhotos from "./PolaroidPhotos";
+import content from "./content";
 
 export default function Letter() {
+  const { letter, credits } = content;
   return (
     <motion.article
       initial={{ y: 80, opacity: 0, scale: 0.97 }}
@@ -26,13 +28,7 @@ export default function Letter() {
           show: { transition: { staggerChildren: 0.25, delayChildren: 0.5 } },
         }}
       >
-        {[
-          "Dear Mom,",
-          "Happy Birthday.",
-          "Thank you for always being there for us, for caring for us, and for making everything feel safe.",
-          "This little letter is just a small way of saying how much we love you.",
-          "You mean more to us than we can ever properly put into words.",
-        ].map((line, i) => (
+        {letter.lines.map((line, i) => (
           <motion.p
             key={i}
             className={i === 0 ? "mb-4" : "mb-3"}
@@ -52,9 +48,9 @@ export default function Letter() {
             show: { opacity: 1, y: 0, transition: { duration: 0.7 } },
           }}
         >
-          <p className="font-mynerve text-lg">Love always,</p>
+          <p className="font-mynerve text-lg">{letter.closing}</p>
           <p className="font-mynerve text-2xl sm:text-3xl text-muted-red">
-            Bruhathi
+            {letter.signature}
           </p>
         </motion.div>
       </motion.div>
@@ -69,12 +65,14 @@ export default function Letter() {
         animate={{ opacity: 1 }}
         transition={{ delay: 2.8, duration: 0.8 }}
       >
-        <p className="text-xs uppercase tracking-[0.25em]">With love,</p>
+        <p className="text-xs uppercase tracking-[0.25em]">
+          {credits.withLove}
+        </p>
         <p className="font-mynerve text-xl text-muted-red">
-          Written by Bruhathi
+          {credits.writtenBy}
         </p>
         <p className="mt-1 text-[11px] uppercase tracking-[0.2em] text-soft-brown/60">
-          Directed by Chakri ❤️
+          {credits.directedBy}
         </p>
       </motion.div>
     </motion.article>

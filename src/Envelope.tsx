@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { useState } from "react";
 import { playSound } from "./audio/sounds";
+import content from "./content";
 
 type Props = { onOpen: () => void };
 
@@ -90,7 +91,7 @@ export default function Envelope({ onOpen }: Props) {
       </div>
 
       <p className="mt-8 text-center font-school text-xs italic tracking-wide text-soft-brown/70">
-        click the heart to open ♡
+        {content.envelope.hint}
       </p>
     </div>
   );

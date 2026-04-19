@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { motion } from "motion/react";
 import confetti from "canvas-confetti";
 import { playSound } from "./audio/sounds";
+import content from "./content";
 
 type Props = { onDone: () => void };
 
@@ -57,10 +58,10 @@ export default function CelebrationScreen({ onDone }: Props) {
         exit={{ opacity: 0, y: -10 }}
         transition={{ type: "spring", stiffness: 180, damping: 14 }}
       >
-        Happy Birthday
+        {content.celebration.line1}
         <br />
-        <span className="text-seal-dark">Mom</span>
-        <span className="ml-2">🎉</span>
+        <span className="text-seal-dark">{content.celebration.line2}</span>
+        <span className="ml-2">{content.celebration.emoji}</span>
       </motion.h1>
     </motion.section>
   );

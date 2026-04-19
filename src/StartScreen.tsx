@@ -1,8 +1,10 @@
 import { motion } from "motion/react";
+import content from "./content";
 
 type Props = { onStart: () => void };
 
 export default function StartScreen({ onStart }: Props) {
+  const t = content.start;
   return (
     <motion.section
       className="relative z-10 flex min-h-screen items-center justify-center px-6"
@@ -18,7 +20,7 @@ export default function StartScreen({ onStart }: Props) {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.8 }}
         >
-          a little something for you, mom
+          {t.tagline}
         </motion.p>
 
         <motion.button
@@ -30,7 +32,7 @@ export default function StartScreen({ onStart }: Props) {
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
-          Click to start
+          {t.button}
           <span className="pointer-events-none absolute -inset-2 rounded-full ring-1 ring-muted-red/20 transition group-hover:ring-muted-red/40" />
         </motion.button>
 
@@ -40,7 +42,7 @@ export default function StartScreen({ onStart }: Props) {
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2, duration: 0.8 }}
         >
-          (turn your sound on for the full feel)
+          {t.hint}
         </motion.p>
       </div>
     </motion.section>

@@ -2,6 +2,7 @@ import { motion } from "motion/react";
 import { useState } from "react";
 import { POLAROID_IMAGES, type PolaroidImage } from "./assets/images";
 import PolaroidModal from "./PolaroidModal";
+import content from "./content";
 
 export default function PolaroidPhotos() {
   const [active, setActive] = useState<PolaroidImage | null>(null);
@@ -9,7 +10,7 @@ export default function PolaroidPhotos() {
   return (
     <div className="relative mt-12 pt-6">
       <p className="mb-6 text-center font-school text-xs italic tracking-wide text-soft-brown/70">
-        — a few of our favorite memories —
+        {content.polaroids.heading}
       </p>
 
       <motion.div

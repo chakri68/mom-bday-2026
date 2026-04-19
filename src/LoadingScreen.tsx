@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { useEffect, useState } from "react";
 import { preloadAll } from "./preload";
 import { unlockAudio } from "./audio/sounds";
+import content from "./content";
 
 type Props = {
   onReady: () => void;
@@ -13,6 +14,7 @@ type Props = {
  * unlocked before any sound is triggered.
  */
 export default function LoadingScreen({ onReady }: Props) {
+  const t = content.loading;
   const [progress, setProgress] = useState(0);
   const [done, setDone] = useState(false);
 
@@ -43,7 +45,7 @@ export default function LoadingScreen({ onReady }: Props) {
     >
       <div className="flex w-full max-w-sm flex-col items-center gap-6 text-center">
         <p className="font-school text-base text-soft-brown italic">
-          {done ? "all set ♡" : "getting things ready…"}
+          {done ? t.readyText : t.loadingText}
         </p>
 
         <AnimatePresence initial={false}>
@@ -81,12 +83,10 @@ export default function LoadingScreen({ onReady }: Props) {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.1, ease: "linear" }}
         >
-          {done ? "Begin ♡" : "loading…"}
+          {done ? t.buttonReady : t.buttonLoading}
         </motion.button>
 
-        <p className="max-w-[20rem] text-xs text-soft-brown/50">
-          tap begin to enable sound — it's part of the magic
-        </p>
+        <p className="max-w-[20rem] text-xs text-soft-brown/50">{t.footer}</p>
       </div>
     </motion.section>
   );

@@ -1,8 +1,10 @@
 @import "tailwindcss";
 
 @theme {
-  --font-caveat: "Caveat", cursive;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mynerve: "Mynerve", "Caveat", cursive;
+  --font-serif: "Libre Baskerville", Georgia, serif;
+  --font-school: "Schoolbell", cursive;
+  --font-sans: "Libre Baskerville", Georgia, serif;
   --color-cream: #fdf6ec;
   --color-warm-white: #fefcf8;
   --color-pastel-pink: #f8e0e6;
@@ -24,8 +26,37 @@ body,
   margin: 0;
 }
 
+html {
+  /* Reserve space for the scrollbar at all times so modals locking body
+     scroll don't cause horizontal layout shift. */
+  scrollbar-gutter: stable;
+  /* Firefox: thin themed scrollbar. */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(201, 107, 107, 0.55) transparent;
+  font-size: 15px; /* slightly smaller base so text doesn't feel loud */
+}
+
+/* WebKit: ultra-thin overlay scrollbar, no gutter background. */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(201, 107, 107, 0.5);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(201, 107, 107, 0.75);
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
 body {
-  font-family: var(--font-sans);
+  font-family: var(--font-school);
   background: radial-gradient(
     ellipse at center,
     #fefcf8 0%,

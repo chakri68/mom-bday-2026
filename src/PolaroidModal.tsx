@@ -61,7 +61,7 @@ export default function PolaroidModal({ photo, onClose }: Props) {
                   className="block max-h-[70vh] max-w-[80vw] sm:max-w-[520px] object-contain"
                 />
               </div>
-              <p className="mt-4 text-center font-caveat text-3xl text-soft-brown">
+              <p className="mt-4 text-center font-mynerve text-2xl text-soft-brown">
                 {photo.caption}
               </p>
             </div>

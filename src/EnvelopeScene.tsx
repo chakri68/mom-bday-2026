@@ -16,7 +16,7 @@ export default function EnvelopeScene({ opened, onOpen }: Props) {
   useEffect(() => {
     if (!opened) return;
     playSound("paperSlide");
-    bgMusic.fadeIn(0.3, 2500);
+    bgMusic.fadeIn(0.22, 3500);
   }, [opened]);
 
   return (

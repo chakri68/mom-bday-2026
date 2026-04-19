@@ -42,7 +42,7 @@ export default function LoadingScreen({ onReady }: Props) {
       transition={{ duration: 0.5 }}
     >
       <div className="flex w-full max-w-sm flex-col items-center gap-6 text-center">
-        <p className="font-caveat text-3xl text-soft-brown">
+        <p className="font-school text-base text-soft-brown italic">
           {done ? "all set ♡" : "getting things ready…"}
         </p>
 
@@ -64,7 +64,7 @@ export default function LoadingScreen({ onReady }: Props) {
                 />
               </div>
 
-              <p className="font-caveat text-xl text-soft-brown/60">
+              <p className="font-school text-xs text-soft-brown/60 tracking-wide">
                 {Math.round(progress * 100)}%
               </p>
             </motion.div>
@@ -74,7 +74,7 @@ export default function LoadingScreen({ onReady }: Props) {
         <motion.button
           onClick={handleBegin}
           disabled={!done}
-          className="mt-4 rounded-full bg-muted-red/90 px-8 py-4 font-caveat text-2xl text-warm-white shadow-[0_10px_30px_-10px_rgba(201,107,107,0.6)] transition enabled:hover:bg-muted-red disabled:cursor-not-allowed disabled:opacity-40"
+          className="mt-4 rounded-full bg-muted-red/90 px-8 py-3 font-school text-sm tracking-wider uppercase text-warm-white shadow-[0_10px_30px_-10px_rgba(201,107,107,0.6)] transition enabled:hover:bg-muted-red disabled:cursor-not-allowed disabled:opacity-40"
           whileHover={done ? { scale: 1.04 } : undefined}
           whileTap={done ? { scale: 0.96 } : undefined}
           initial={{ opacity: 0 }}

@@ -18,7 +18,7 @@ export default function Letter() {
       <div className="absolute -top-3 right-12 h-6 w-20 rotate-[5deg] bg-beige/80 shadow-sm" />
 
       <motion.div
-        className="font-caveat text-2xl sm:text-3xl leading-relaxed text-soft-brown"
+        className="font-mynerve text-lg sm:text-xl leading-relaxed text-soft-brown"
         initial="hidden"
         animate="show"
         variants={{
@@ -52,8 +52,10 @@ export default function Letter() {
             show: { opacity: 1, y: 0, transition: { duration: 0.7 } },
           }}
         >
-          <p>Love always,</p>
-          <p className="text-3xl sm:text-4xl text-muted-red">Bruhathi</p>
+          <p className="font-mynerve text-lg">Love always,</p>
+          <p className="font-mynerve text-2xl sm:text-3xl text-muted-red">
+            Bruhathi
+          </p>
         </motion.div>
       </motion.div>
 
@@ -62,14 +64,18 @@ export default function Letter() {
 
       {/* Credits */}
       <motion.div
-        className="mt-12 flex flex-col items-center gap-1 font-caveat text-soft-brown/80"
+        className="mt-12 flex flex-col items-center gap-1 font-school text-soft-brown/80"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2.8, duration: 0.8 }}
       >
-        <p className="text-2xl">With love,</p>
-        <p className="text-3xl text-muted-red">Written by Bruhathi</p>
-        <p className="mt-1 text-lg text-soft-brown/60">Directed by Chakri ❤️</p>
+        <p className="text-xs uppercase tracking-[0.25em]">With love,</p>
+        <p className="font-mynerve text-xl text-muted-red">
+          Written by Bruhathi
+        </p>
+        <p className="mt-1 text-[11px] uppercase tracking-[0.2em] text-soft-brown/60">
+          Directed by Chakri ❤️
+        </p>
       </motion.div>
     </motion.article>
   );

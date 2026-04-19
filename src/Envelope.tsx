@@ -89,7 +89,7 @@ export default function Envelope({ onOpen }: Props) {
         </motion.button>
       </div>
 
-      <p className="mt-8 text-center font-caveat text-xl text-soft-brown/70">
+      <p className="mt-8 text-center font-school text-xs italic tracking-wide text-soft-brown/70">
         click the heart to open ♡
       </p>
     </div>

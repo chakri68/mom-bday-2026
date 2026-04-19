@@ -1,4 +1,4 @@
-import { SOUNDS, BG_MUSIC_SRC, loadSound, bgMusic } from "./audio/sounds";
+import { SOUNDS, loadSound, bgMusic } from "./audio/sounds";
 import { POLAROID_IMAGES } from "./assets/images";
 
 /**
@@ -37,8 +37,6 @@ export async function preloadAll(
 
   // fire-and-forget: tell the browser to start buffering the bg track
   bgMusic.preload();
-  // bump volume hint — actual buffering is async; we don't block on it
-  void BG_MUSIC_SRC;
 }
 
 function loadImage(src: string): Promise<void> {

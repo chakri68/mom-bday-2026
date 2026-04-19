@@ -51,7 +51,7 @@ export default function CelebrationScreen({ onDone }: Props) {
       transition={{ duration: 0.6 }}
     >
       <motion.h1
-        className="font-caveat text-6xl sm:text-7xl md:text-8xl text-muted-red drop-shadow-sm text-center leading-tight"
+        className="font-school font-bold text-4xl sm:text-5xl md:text-6xl text-muted-red drop-shadow-sm text-center leading-tight tracking-tight"
         initial={{ scale: 0.6, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -10 }}

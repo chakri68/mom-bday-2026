@@ -73,8 +73,18 @@ export const SOUNDS: Record<SoundId, SoundDef> = {
   },
 };
 
-/** Path for the background music. Expected to be loopable. */
-export const BG_MUSIC_SRC = `${base}sounds/bg-music.mp3`;
+/**
+ * Background music playlist. First track starts when the letter opens and
+ * carries the emotional tone; subsequent tracks fade in after it ends and
+ * the cycle continues forever (crossfaded).
+ *
+ * Clair de Lune is intentionally first — melancholic + tender.
+ */
+export const BG_PLAYLIST: string[] = [
+  `${base}music/Clair de Lune (Studio Version) [X-Xxqt6Xdio].mp3`,
+  `${base}music/Erik Satie - Gymnopédie No.1 [S-Xm7s9eGxU].mp3`,
+  `${base}music/Benson Boone - Beautiful Things (Instrumental) [Official Audio] [yKGWdveqdVA].mp3`,
+];
 
 /* ------------------------------------------------------------------ */
 
@@ -165,16 +175,43 @@ export function playSound(id: SoundId): void {
 
 /* ------------------ background music ------------------- */
 
+/**
+ * Plays a playlist of tracks with fade-in / fade-out at track boundaries.
+ *
+ * - Track 0 starts on `fadeIn()` (called once the letter opens).
+ * - When a track is near its end we start fading it out and fade in the
+ *   next one, then swap the active element. Order cycles forever.
+ * - Uses two <audio> elements so crossfades are smooth (no gap, no click).
+ */
 class BgMusic {
-  private el: HTMLAudioElement | null = null;
+  private elA: HTMLAudioElement | null = null;
+  private elB: HTMLAudioElement | null = null;
+  private active: "A" | "B" = "A";
+  private index = 0;
   private started = false;
-  private targetVolume = 0.3;
-  private fadeRaf = 0;
+  private targetVolume = 0.22; // low-medium — melancholic, not overpowering
+  private fadeRafs = new Map<HTMLAudioElement, number>();
+  private endWatchRaf = 0;
+  private readonly fadeMs = 3500;
 
+  /** Warm the browser cache for the first track (and a hint for the second). */
   preload(): void {
-    if (this.el) return;
-    const a = new Audio(BG_MUSIC_SRC);
-    a.loop = true;
+    if (this.elA) return;
+    this.elA = this.makeEl(BG_PLAYLIST[0]);
+    if (BG_PLAYLIST.length > 1) {
+      // fetch second track too so the first crossfade is smooth
+      const hint = new Audio(BG_PLAYLIST[1]);
+      hint.preload = "auto";
+      try {
+        hint.load();
+      } catch {
+        /* ignore */
+      }
+    }
+  }
+
+  private makeEl(src: string): HTMLAudioElement {
+    const a = new Audio(src);
     a.preload = "auto";
     a.volume = 0;
     try {
@@ -182,46 +219,124 @@ class BgMusic {
     } catch {
       /* ignore */
     }
-    this.el = a;
+    return a;
   }
 
-  /** Start playing at 0 volume and fade in. Safe to call once. */
-  fadeIn(targetVolume = 0.3, durationMs = 2500): void {
-    if (!this.el) this.preload();
-    const el = this.el!;
+  private get activeEl(): HTMLAudioElement | null {
+    return this.active === "A" ? this.elA : this.elB;
+  }
+
+  /** Start playing the first track (fades in). Safe to call once. */
+  fadeIn(targetVolume = 0.22, durationMs = this.fadeMs): void {
+    if (!this.elA) this.preload();
     this.targetVolume = targetVolume;
     if (this.started) return;
     this.started = true;
-    if (isMuted()) return; // don't play audio, but mark as started so unmute resumes
-    el.volume = 0;
-    el.play().catch(() => {
-      /* autoplay may still be blocked on some browsers; ignored */
-    });
-    this.fadeTo(targetVolume, durationMs);
+    if (isMuted()) return;
+    this.playActive(durationMs);
+    this.watchForEnd();
   }
 
-  private fadeTo(target: number, durationMs: number): void {
-    if (!this.el) return;
-    cancelAnimationFrame(this.fadeRaf);
-    const el = this.el;
+  private playActive(fadeMs: number): void {
+    const el = this.activeEl;
+    if (!el) return;
+    el.volume = 0;
+    el.play().catch(() => {
+      /* autoplay may still be blocked on some browsers */
+    });
+    this.fadeTo(el, this.targetVolume, fadeMs);
+  }
+
+  private fadeTo(
+    el: HTMLAudioElement,
+    target: number,
+    durationMs: number,
+    onDone?: () => void,
+  ): void {
+    const existing = this.fadeRafs.get(el);
+    if (existing !== undefined) cancelAnimationFrame(existing);
     const start = el.volume;
     const startedAt = performance.now();
     const step = (now: number) => {
       const t = Math.min(1, (now - startedAt) / durationMs);
-      el.volume = start + (target - start) * t;
-      if (t < 1) this.fadeRaf = requestAnimationFrame(step);
+      el.volume = Math.max(0, start + (target - start) * t);
+      if (t < 1) {
+        this.fadeRafs.set(el, requestAnimationFrame(step));
+      } else {
+        this.fadeRafs.delete(el);
+        onDone?.();
+      }
     };
-    this.fadeRaf = requestAnimationFrame(step);
+    this.fadeRafs.set(el, requestAnimationFrame(step));
+  }
+
+  /**
+   * Poll the active track's position and, when it's within fadeMs of the
+   * end, start the crossfade to the next track.
+   */
+  private watchForEnd(): void {
+    cancelAnimationFrame(this.endWatchRaf);
+    const tick = () => {
+      const el = this.activeEl;
+      if (!this.started || !el) return;
+      const remaining = (el.duration || 0) - el.currentTime;
+      if (
+        el.duration > 0 &&
+        !Number.isNaN(el.duration) &&
+        remaining <= this.fadeMs / 1000 + 0.1
+      ) {
+        this.advance();
+        return;
+      }
+      this.endWatchRaf = requestAnimationFrame(tick);
+    };
+    this.endWatchRaf = requestAnimationFrame(tick);
+  }
+
+  /** Crossfade from the active element to the next track in the playlist. */
+  private advance(): void {
+    const nextIndex = (this.index + 1) % BG_PLAYLIST.length;
+    const nextSrc = BG_PLAYLIST[nextIndex];
+    const nextKey: "A" | "B" = this.active === "A" ? "B" : "A";
+    const nextEl = this.makeEl(nextSrc);
+    if (nextKey === "A") this.elA = nextEl;
+    else this.elB = nextEl;
+
+    const prevEl = this.activeEl;
+
+    // start the new one and fade it in
+    nextEl.volume = 0;
+    nextEl.play().catch(() => {});
+    this.fadeTo(nextEl, this.targetVolume, this.fadeMs);
+
+    // fade out + stop the previous one
+    if (prevEl) {
+      this.fadeTo(prevEl, 0, this.fadeMs, () => {
+        prevEl.pause();
+        prevEl.src = "";
+        if (this.active === "A") this.elA = null;
+        else this.elB = null;
+      });
+    }
+
+    this.active = nextKey;
+    this.index = nextIndex;
+    this.watchForEnd();
   }
 
   pauseNow(): void {
-    this.el?.pause();
+    cancelAnimationFrame(this.endWatchRaf);
+    this.elA?.pause();
+    this.elB?.pause();
   }
 
   resumeIfStarted(): void {
-    if (!this.started || !this.el || isMuted()) return;
-    this.el.play().catch(() => {});
-    this.fadeTo(this.targetVolume, 800);
+    if (!this.started || isMuted()) return;
+    const el = this.activeEl;
+    if (!el) return;
+    el.play().catch(() => {});
+    this.fadeTo(el, this.targetVolume, 1000);
+    this.watchForEnd();
   }
 }
 

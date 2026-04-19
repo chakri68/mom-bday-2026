@@ -8,7 +8,7 @@ export default function PolaroidPhotos() {
 
   return (
     <div className="relative mt-12 pt-6">
-      <p className="mb-6 text-center font-caveat text-xl text-soft-brown/70">
+      <p className="mb-6 text-center font-school text-xs italic tracking-wide text-soft-brown/70">
         — a few of our favorite memories —
       </p>
 
@@ -59,7 +59,7 @@ export default function PolaroidPhotos() {
                   loading="lazy"
                 />
               </div>
-              <p className="mt-2 text-center font-caveat text-lg text-soft-brown">
+              <p className="mt-4 text-center font-mynerve text-sm text-soft-brown">
                 {p.caption}
               </p>
             </div>

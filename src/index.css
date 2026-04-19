@@ -32,6 +32,8 @@ body {
     #fdf6ec 55%,
     #f5ead6 100%
   );
+  background-attachment: fixed;
+  background-repeat: no-repeat;
   color: #4a3a2e;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;

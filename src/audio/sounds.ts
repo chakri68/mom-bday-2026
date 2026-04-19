@@ -4,11 +4,14 @@
  * - Decodes all sound effects into AudioBuffers once (via the preloader).
  * - Plays sub-regions of each buffer using `from` / `to` (seconds) so we can
  *   trim the stock assets without re-encoding them.
+ * - Supports per-sound fade in / out / both, via `fade` and `fadeDuration`.
  * - Handles a single looping background track with fade in / fade out.
  * - Respects a global mute flag persisted in localStorage.
  */
 
 export type SoundId = "popper" | "cheer" | "snap" | "paperTurn" | "paperSlide";
+
+export type SoundFade = "none" | "in" | "out" | "both";
 
 export type SoundDef = {
   src: string;
@@ -18,6 +21,10 @@ export type SoundDef = {
   to?: number;
   /** Playback volume 0-1. Default: 1. */
   volume?: number;
+  /** Fade behaviour at the edges of the clip. Default: "none". */
+  fade?: SoundFade;
+  /** Fade duration in seconds. Default: 0.15. Clamped to duration/2. */
+  fadeDuration?: number;
 };
 
 const base = import.meta.env.BASE_URL; // "/" locally, "/mom-bday-2026/" on pages
@@ -34,8 +41,10 @@ export const SOUNDS: Record<SoundId, SoundDef> = {
   cheer: {
     src: `${base}sounds/driken5482-applause-cheer-236786.mp3`,
     from: 0.2,
-    to: 2.6,
+    to: 3.6,
     volume: 0.35,
+    fade: "both",
+    fadeDuration: 0.4,
   },
   // seal click — short snap
   snap: {
@@ -50,6 +59,8 @@ export const SOUNDS: Record<SoundId, SoundDef> = {
     from: 0,
     to: 1.6,
     volume: 0.7,
+    fade: "out",
+    fadeDuration: 0.2,
   },
   // letter sliding out — reuse the same paper asset, different region
   paperSlide: {
@@ -57,6 +68,8 @@ export const SOUNDS: Record<SoundId, SoundDef> = {
     from: 1.6,
     to: 3.2,
     volume: 0.55,
+    fade: "both",
+    fadeDuration: 0.2,
   },
 };
 
@@ -117,18 +130,36 @@ export function playSound(id: SoundId): void {
   const def = SOUNDS[id];
   const buf = buffers.get(def.src);
   if (!buf) return; // not loaded yet — silently skip
+
   const c = getCtx();
   const source = c.createBufferSource();
   source.buffer = buf;
 
   const gain = c.createGain();
-  gain.gain.value = def.volume ?? 1;
-
-  source.connect(gain).connect(c.destination);
+  const volume = def.volume ?? 1;
 
   const from = Math.max(0, def.from ?? 0);
   const to = Math.min(buf.duration, def.to ?? buf.duration);
   const duration = Math.max(0.05, to - from);
+
+  const fade: SoundFade = def.fade ?? "none";
+  const fadeDur = Math.min(def.fadeDuration ?? 0.15, duration / 2);
+  const now = c.currentTime;
+
+  if (fade === "in" || fade === "both") {
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(volume, now + fadeDur);
+  } else {
+    gain.gain.setValueAtTime(volume, now);
+  }
+
+  if (fade === "out" || fade === "both") {
+    // hold full volume until fade-out starts, then ramp down to ~0
+    gain.gain.setValueAtTime(volume, now + duration - fadeDur);
+    gain.gain.linearRampToValueAtTime(0.0001, now + duration);
+  }
+
+  source.connect(gain).connect(c.destination);
   source.start(0, from, duration);
 }
 
@@ -146,7 +177,6 @@ class BgMusic {
     a.loop = true;
     a.preload = "auto";
     a.volume = 0;
-    // kick the browser to actually buffer
     try {
       a.load();
     } catch {

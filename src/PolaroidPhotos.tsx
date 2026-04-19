@@ -1,7 +1,11 @@
 import { motion } from "motion/react";
-import { POLAROID_IMAGES } from "./assets/images";
+import { useState } from "react";
+import { POLAROID_IMAGES, type PolaroidImage } from "./assets/images";
+import PolaroidModal from "./PolaroidModal";
 
 export default function PolaroidPhotos() {
+  const [active, setActive] = useState<PolaroidImage | null>(null);
+
   return (
     <div className="relative mt-12 pt-6">
       <p className="mb-6 text-center font-caveat text-xl text-soft-brown/70">
@@ -20,9 +24,12 @@ export default function PolaroidPhotos() {
         }}
       >
         {POLAROID_IMAGES.map((p, i) => (
-          <motion.div
+          <motion.button
             key={i}
-            className="relative"
+            type="button"
+            onClick={() => setActive(p)}
+            aria-label={`Open photo: ${p.caption}`}
+            className="relative cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-muted-red/60"
             style={{ rotate: `${p.rotate}deg` }}
             variants={{
               hidden: { opacity: 0, y: 30, scale: 0.9 },
@@ -34,6 +41,7 @@ export default function PolaroidPhotos() {
               },
             }}
             whileHover={{ rotate: 0, scale: 1.04, zIndex: 10 }}
+            whileTap={{ scale: 0.98 }}
           >
             {/* paperclip */}
             <PaperClip className="absolute -top-4 left-6 z-10" />
@@ -55,9 +63,11 @@ export default function PolaroidPhotos() {
                 {p.caption}
               </p>
             </div>
-          </motion.div>
+          </motion.button>
         ))}
       </motion.div>
+
+      <PolaroidModal photo={active} onClose={() => setActive(null)} />
     </div>
   );
 }

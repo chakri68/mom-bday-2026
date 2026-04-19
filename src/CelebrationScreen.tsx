@@ -35,7 +35,7 @@ export default function CelebrationScreen({ onDone }: Props) {
     playSound("popper");
     const cheerTimer = setTimeout(() => playSound("cheer"), 180);
 
-    const t = setTimeout(onDone, 2600);
+    const t = setTimeout(onDone, 4200);
     return () => {
       clearTimeout(cheerTimer);
       clearTimeout(t);
